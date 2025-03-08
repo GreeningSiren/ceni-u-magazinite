@@ -9,6 +9,8 @@ import PriceComparison from './pages/PriceComparison';
 import Home from './pages/Home';
 import AdminDashboard from './components/AdminDashboard';
 import { useAuth } from './lib/auth';
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
       <BrowserRouter>
         <AppRoutes />
       </BrowserRouter>
+      <Analytics />
+      <SpeedInsights />
     </AuthProvider>
   );
 }
