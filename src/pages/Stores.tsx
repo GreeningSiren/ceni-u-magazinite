@@ -11,6 +11,7 @@ interface StoreType {
   zip: string | null;
   image_url: string | null;
   maps_url: string | null;
+  status: 'pending' | 'approved';
 }
 
 interface RegionType {
@@ -19,7 +20,7 @@ interface RegionType {
 }
 
 export default function Stores() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const [stores, setStores] = useState<StoreType[]>([]);
   const [regions, setRegions] = useState<RegionType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -115,7 +116,8 @@ export default function Stores() {
         zip: formData.zip || null,
         image_url: formData.image_url || null,
         maps_url: formData.maps_url || null,
-        user_id: user.data.user.id
+        user_id: user.data.user.id,
+        status: isAdmin ? 'approved' : 'pending'
       };
       
       if (editingStore) {

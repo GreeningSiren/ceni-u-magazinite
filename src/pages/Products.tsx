@@ -11,10 +11,11 @@ interface ProductType {
   category: string | null;
   brand: string | null;
   image_url: string | null;
+  status: 'pending' | 'approved';
 }
 
 export default function Products() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -95,7 +96,8 @@ export default function Products() {
         category: formData.category || null,
         brand: formData.brand || null,
         image_url: formData.image_url || null,
-        user_id: user.data.user.id
+        user_id: user.data.user.id,
+        status: isAdmin ? 'approved' : 'pending'
       };
       
       if (editingProduct) {
