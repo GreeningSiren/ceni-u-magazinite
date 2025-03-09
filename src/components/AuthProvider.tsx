@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { AuthContext, isAdmin as checkIsAdmin } from '../lib/auth';
+import { setTheme as setThemeInStorage } from '../lib/theme';
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [preferredRegion, setPreferredRegion] = useState<string>('Цариградски Комплекс');
+  const [theme, setTheme] = useState<string>('system');
 
   useEffect(() => {
     // Get initial session
@@ -24,7 +27,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         if (session && (_event === 'SIGNED_IN' || _event === 'TOKEN_REFRESHED') && !isAuthPage) {
           return;
         }
-        
+
         setUser(session?.user ?? null);
         if (session?.user) {
           const isAdminUser = await checkIsAdmin();
@@ -36,11 +39,30 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       });
       return () => subscription.unsubscribe();
     }
+    
     getUserAndAdminStatus();
   }, []);
 
+  useEffect(() => {
+    const getUserPreferences = async () => {
+      const { data, error } = await supabase.from('user_preferences').select('preferred_region, theme').eq('user_id', user?.id).single();
+      if (error) {
+        console.error('Error getting user preferences:', error);
+        return;
+      }
+      if (data) {
+        setPreferredRegion(data.preferred_region);
+        setTheme(data.theme);
+        setThemeInStorage(data.theme);
+      }
+    }
+    if (user) {
+      getUserPreferences();
+    }
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading }}>
+    <AuthContext.Provider value={{ user, isAdmin, loading, preferredRegion, theme }}>
       {children}
     </AuthContext.Provider>
   );

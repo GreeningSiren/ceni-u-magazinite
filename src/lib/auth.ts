@@ -24,15 +24,20 @@ export async function getCurrentUser() {
 
 // Context to avoid unnecessary re-renders
 import { createContext, useContext } from 'react';
+import { Theme } from './theme';
 
 export const AuthContext = createContext<{
   isAdmin: boolean;
   user: any | null;
   loading: boolean;
+  preferredRegion: string;
+  theme: Theme;
 }>({
   isAdmin: false,
   user: null,
   loading: true,
+  preferredRegion: 'Царигрaдски Комплекс',
+  theme: 'system',
 });
 
 export const useAuth = () => useContext(AuthContext);

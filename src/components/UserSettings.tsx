@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Settings, Sun, Moon, Monitor, X } from 'lucide-react';
-import { Theme, getTheme, setTheme } from '../lib/theme';
+import { Theme, setTheme } from '../lib/theme';
+import { useAuth } from '../lib/auth';
 
 interface Region {
   id: number;
@@ -9,12 +10,14 @@ interface Region {
 }
 
 export default function UserSettings() {
+  const { preferredRegion, theme } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [regions, setRegions] = useState<Region[]>([]);
-  const [selectedRegion, setSelectedRegion] = useState<string>('');
-  const [currentTheme, setCurrentTheme] = useState<Theme>(getTheme());
+  const [selectedRegion, setSelectedRegion] = useState<string>(preferredRegion);
+  const [currentTheme, setCurrentTheme] = useState<Theme>(theme);
   const [loading, setLoading] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [modifiedRegion, setModifiedRegion] = useState(false);
 
   useEffect(() => {
     if (showModal) {
@@ -29,7 +32,7 @@ export default function UserSettings() {
         .from('regions')
         .select('id, name')
         .order('name');
-      
+
       if (error) throw error;
       setRegions(data || []);
     } catch (error) {
@@ -85,11 +88,15 @@ export default function UserSettings() {
 
         if (error) throw error;
         setSaveSuccess(true);
-        
+
         // Only close modal if it's not a theme change
-        if (!newTheme) {
-          setTimeout(() => setShowModal(false), 1500);
-        }
+        // if (!newTheme) {
+        //   setTimeout(() => setShowModal(false), 1500);
+        // }
+        setTimeout(() => {
+          setSaveSuccess(false);
+          setModifiedRegion(false);
+        }, 2000);
       }
     } catch (error) {
       console.error('Грешка при запазване на предпочитания:', error);
@@ -126,7 +133,7 @@ export default function UserSettings() {
                   <X className="h-6 w-6" />
                 </button>
               </div>
-              
+
               <div>
                 <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-white">
                   Настройки
@@ -139,7 +146,7 @@ export default function UserSettings() {
                     <select
                       id="region"
                       value={selectedRegion}
-                      onChange={(e) => setSelectedRegion(e.target.value)}
+                      onChange={(e) => { setSelectedRegion(e.target.value); setModifiedRegion(true); setSaveSuccess(false); }}
                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
                     >
                       <option value="">Изберете район</option>
@@ -158,33 +165,30 @@ export default function UserSettings() {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => handleThemeChange('light')}
-                        className={`p-2 rounded-lg flex items-center ${
-                          currentTheme === 'light'
-                            ? 'bg-blue-100 text-blue-600 dark:bg-blue-600 dark:text-white'
-                            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
-                        }`}
+                        className={`p-2 rounded-lg flex items-center ${currentTheme === 'light'
+                          ? 'bg-blue-100 text-blue-600 dark:bg-blue-600 dark:text-white'
+                          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+                          }`}
                       >
                         <Sun className="h-5 w-5" />
                         <span className="ml-2">Светла</span>
                       </button>
                       <button
                         onClick={() => handleThemeChange('dark')}
-                        className={`p-2 rounded-lg flex items-center ${
-                          currentTheme === 'dark'
-                            ? 'bg-blue-100 text-blue-600 dark:bg-blue-600 dark:text-white'
-                            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
-                        }`}
+                        className={`p-2 rounded-lg flex items-center ${currentTheme === 'dark'
+                          ? 'bg-blue-100 text-blue-600 dark:bg-blue-600 dark:text-white'
+                          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+                          }`}
                       >
                         <Moon className="h-5 w-5" />
                         <span className="ml-2">Тъмна</span>
                       </button>
                       <button
                         onClick={() => handleThemeChange('system')}
-                        className={`p-2 rounded-lg flex items-center ${
-                          currentTheme === 'system'
-                            ? 'bg-blue-100 text-blue-600 dark:bg-blue-600 dark:text-white'
-                            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
-                        }`}
+                        className={`p-2 rounded-lg flex items-center ${currentTheme === 'system'
+                          ? 'bg-blue-100 text-blue-600 dark:bg-blue-600 dark:text-white'
+                          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+                          }`}
                       >
                         <Monitor className="h-5 w-5" />
                         <span className="ml-2">Системна</span>
@@ -195,8 +199,15 @@ export default function UserSettings() {
               </div>
 
               {saveSuccess && (
-                <div className="mt-4 p-2 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 rounded">
-                  Настройките са запазени успешно!
+                <div>
+                  <div className="mt-4 p-2 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 rounded">
+                    Настройките са запазени успешно!
+                  </div>
+                  {modifiedRegion && (
+                    <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded">
+                      Моля презаредете страницата за да видите промените.
+                    </div>
+                  )}
                 </div>
               )}
 
