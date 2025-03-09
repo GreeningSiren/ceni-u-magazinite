@@ -1,6 +1,6 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { ShoppingCart, Store, Tag, BarChart3, LogOut, Menu, X, User, LogIn } from 'lucide-react';
+import { ShoppingCart, LogOut, Menu, X, LogIn } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../lib/auth';
 import UserSettings from './UserSettings';

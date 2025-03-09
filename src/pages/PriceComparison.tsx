@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, DollarSign, TrendingDown, TrendingUp, Search, LogIn } from 'lucide-react';
+import { Plus, DollarSign, TrendingDown, TrendingUp, Search } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { useNavigate } from 'react-router-dom';
 

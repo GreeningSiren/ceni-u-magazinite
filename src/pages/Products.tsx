@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, ShoppingBag, Edit, Trash2, Image } from 'lucide-react';
+import { Plus, ShoppingBag, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 
@@ -11,7 +11,8 @@ interface ProductType {
   category: string | null;
   brand: string | null;
   image_url: string | null;
-  status: 'pending' | 'approved';
+  status: 'pending' | 'approved' | 'rejected';
+  user_id: string;
 }
 
 export default function Products() {
@@ -124,6 +125,14 @@ export default function Products() {
     }
   };
 
+  const canEditProduct = (product: ProductType) => {
+    return isAdmin || (user && product.user_id === user.id);
+  };
+
+  const canDeleteProduct = () => {
+    return isAdmin;
+  };
+
   const handleDelete = async (id: number) => {
     if (!confirm('Сигурни ли сте, че искате да изтриете този продукт? Това ще изтрие и всички свързани записи на цени.')) {
       return;
@@ -217,18 +226,22 @@ export default function Products() {
                     </div>
                     {user && (
                       <div className="flex space-x-2" onClick={e => e.stopPropagation()}>
-                        <button
-                          onClick={() => openEditModal(product)}
-                          className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(product.id)}
-                          className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </button>
+                        {canEditProduct(product) && (
+                          <button
+                            onClick={() => openEditModal(product)}
+                            className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                        )}
+                        {canDeleteProduct() && (
+                          <button
+                            onClick={() => handleDelete(product.id)}
+                            className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>

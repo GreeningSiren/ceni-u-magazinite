@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Store, Edit, Trash2, MapPin, Image } from 'lucide-react';
+import { Plus, Store, Edit, Trash2, MapPin } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 
 interface StoreType {
@@ -11,7 +11,8 @@ interface StoreType {
   zip: string | null;
   image_url: string | null;
   maps_url: string | null;
-  status: 'pending' | 'approved';
+  status: 'pending' | 'approved' | 'rejected';
+  user_id: string;
 }
 
 interface RegionType {
@@ -144,6 +145,14 @@ export default function Stores() {
     }
   };
 
+  const canEditStore = (store: StoreType) => {
+    return isAdmin || (user && store.user_id === user.id);
+  };
+
+  const canDeleteStore = () => {
+    return isAdmin;
+  };
+
   const handleDelete = async (id: number) => {
     if (!confirm('Сигурни ли сте, че искате да изтриете този магазин? Това ще изтрие и всички свързани записи на цени.')) {
       return;
@@ -241,18 +250,22 @@ export default function Stores() {
                     </div>
                     {user && (
                       <div className="flex space-x-2">
-                        <button
-                          onClick={() => openEditModal(store)}
-                          className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(store.id)}
-                          className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </button>
+                        {canEditStore(store) && (
+                          <button
+                            onClick={() => openEditModal(store)}
+                            className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </button>
+                        )}
+                        {canDeleteStore() && (
+                          <button
+                            onClick={() => handleDelete(store.id)}
+                            className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>

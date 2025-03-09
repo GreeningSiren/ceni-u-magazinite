@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { BarChart3, ShoppingBag, Store, TrendingUp } from 'lucide-react';
+import { BarChart3, ShoppingBag, Store } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface DashboardStats {
