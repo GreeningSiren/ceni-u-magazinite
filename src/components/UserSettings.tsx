@@ -149,7 +149,7 @@ export default function UserSettings() {
                       onChange={(e) => { setSelectedRegion(e.target.value); setModifiedRegion(true); setSaveSuccess(false); }}
                       className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
                     >
-                      <option value="">Изберете район</option>
+                      <option value="" disabled={selectedRegion !== ""}>Изберете район</option>
                       {regions.map((region) => (
                         <option key={region.id} value={region.name}>
                           {region.name}
