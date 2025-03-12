@@ -110,6 +110,13 @@ export default function Products() {
         
         if (error) throw error;
       } else {
+        const { data, error: fError } = await supabase.functions.invoke('extract-image-url', {
+          body: JSON.stringify({ url: productData.image_url }),
+        });
+        console.log("data", data);
+        productData.image_url = data.raw_url;
+        if(fError) throw fError;
+
         // Insert new product
         const { error } = await supabase
           .from('products')
