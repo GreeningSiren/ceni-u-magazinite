@@ -237,7 +237,7 @@ export default function PriceComparison() {
               className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
               placeholder="Търсене по име на продукт или марка"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {setSearchTerm(e.target.value); setSelectedProduct(filteredProducts[0]?.id);}}
             />
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function PriceComparison() {
             value={selectedProduct || ''}
             onChange={handleProductSelect}
           >
-            <option value="">Изберете продукт</option>
+            <option value="">{filteredProducts.length > 0 ? "Изберете продукт" : "Няма намерени продукти"}</option>
             {filteredProducts.map((product) => (
               <option key={product.id} value={product.id}>
                 {product.name} {product.brand ? `(${product.brand})` : ''}
