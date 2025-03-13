@@ -77,8 +77,14 @@ export default function PriceComparison() {
       if (productsError) throw productsError;
       setProducts(productsData || []);
       
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('product');
       // If there are products, select the first one by default
-      if (productsData && productsData.length > 0) {
+      if (productsData && productsData.length > 0)  {
+        if(productId) {
+          setSelectedProduct(parseInt(productId));
+          return;
+        }
         setSelectedProduct(productsData[0].id);
       }
     } catch (error) {
@@ -293,7 +299,7 @@ export default function PriceComparison() {
                           : '0';
                         
                         return (
-                          <tr key={record.id} className={isLowestPrice ? 'bg-green-50' : ''}>
+                          <tr key={record.id} className={isLowestPrice ? 'bg-green-50' : 'bg-white dark:bg-gray-200'}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-900">
                               {record.store_name}
                             </td>

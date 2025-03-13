@@ -32,12 +32,16 @@ export const AuthContext = createContext<{
   loading: boolean;
   preferredRegion: string;
   theme: Theme;
+  setPreferredRegion?: React.Dispatch<React.SetStateAction<string>>;
+  setTheme?: React.Dispatch<React.SetStateAction<string>>;
 }>({
   isAdmin: false,
   user: null,
   loading: true,
-  preferredRegion: 'Царигрaдски Комплекс',
+  preferredRegion: '',
   theme: 'system',
+  setPreferredRegion: () => {},
+  setTheme: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);

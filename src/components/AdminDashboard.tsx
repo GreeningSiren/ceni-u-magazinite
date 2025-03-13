@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Check, X, AlertCircle } from 'lucide-react';
-import Dashboard from '../pages/Dashboard';
 
 interface PendingItem {
   id: number;
@@ -77,7 +76,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
-      <Dashboard />
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
         Чакащи одобрение ({pendingItems.length})
       </h2>

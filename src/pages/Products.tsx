@@ -101,6 +101,13 @@ export default function Products() {
         status: isAdmin ? 'approved' : 'pending'
       };
       
+      const { data, error: fError } = await supabase.functions.invoke('extract-image-url', {
+        body: JSON.stringify({ url: productData.image_url }),
+      });
+      console.log("data", data);
+      productData.image_url = data.raw_url;
+      if(fError) throw fError;
+
       if (editingProduct) {
         // Update existing product
         const { error } = await supabase
@@ -110,13 +117,6 @@ export default function Products() {
         
         if (error) throw error;
       } else {
-        const { data, error: fError } = await supabase.functions.invoke('extract-image-url', {
-          body: JSON.stringify({ url: productData.image_url }),
-        });
-        console.log("data", data);
-        productData.image_url = data.raw_url;
-        if(fError) throw fError;
-
         // Insert new product
         const { error } = await supabase
           .from('products')
@@ -338,7 +338,7 @@ export default function Products() {
                         </div>
                         <div>
                           <label htmlFor="image_url" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            URL на изображение
+                            URL на изображение (Google Images или директен линк)
                           </label>
                           <div className="mt-1 flex rounded-md shadow-sm">
                             <input

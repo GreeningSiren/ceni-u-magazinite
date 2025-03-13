@@ -10,7 +10,7 @@ interface Region {
 }
 
 export default function UserSettings() {
-  const { preferredRegion, theme } = useAuth();
+  const { preferredRegion, theme, setPreferredRegion: setAuthPreferredRegion, setTheme: setAuthTheme } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [regions, setRegions] = useState<Region[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<string>(preferredRegion);
@@ -88,6 +88,10 @@ export default function UserSettings() {
 
         if (error) throw error;
         setSaveSuccess(true);
+        setAuthPreferredRegion(selectedRegion);
+        if (newTheme) {
+          setAuthTheme(newTheme);
+        }
 
         // Only close modal if it's not a theme change
         // if (!newTheme) {
@@ -96,6 +100,10 @@ export default function UserSettings() {
         setTimeout(() => {
           setSaveSuccess(false);
           setModifiedRegion(false);
+          setShowModal(false);
+          if (modifiedRegion) {
+            window.location.reload();
+          }
         }, 2000);
       }
     } catch (error) {
@@ -205,7 +213,7 @@ export default function UserSettings() {
                   </div>
                   {modifiedRegion && (
                     <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded">
-                      Моля презаредете страницата за да видите промените.
+                      Страницата ще се презареди за да се приложат промените.
                     </div>
                   )}
                 </div>

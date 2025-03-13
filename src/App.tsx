@@ -33,10 +33,10 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
+      <Route path="/" element={<Layout />} errorElement={<Navigate to="/" />} >
         <Route index element={<Home />} />
         <Route path="compare" element={<PriceComparison />} />
-        
+
         {/* Protected routes */}
         <Route
           path="stores"
@@ -63,7 +63,10 @@ function AppRoutes() {
           element={
             user ? (
               isAdmin ? (
-                <AdminDashboard />
+                <>
+                  <Dashboard />
+                  <AdminDashboard />
+                </>
               ) : (
                 <Dashboard />
               )

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { AuthContext, isAdmin as checkIsAdmin } from '../lib/auth';
-import { setTheme as setThemeInStorage } from '../lib/theme';
+import { setTheme as setThemeInStorage, Theme } from '../lib/theme';
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [preferredRegion, setPreferredRegion] = useState<string>('Цариградски Комплекс');
-  const [theme, setTheme] = useState<string>('system');
+  const [theme, setTheme] = useState<Theme>('system');
 
   useEffect(() => {
     // Get initial session
@@ -62,7 +62,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, [user]);
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, preferredRegion, theme }}>
+    <AuthContext.Provider value={{ user, isAdmin, loading, preferredRegion, theme, setPreferredRegion, setTheme }}>
       {children}
     </AuthContext.Provider>
   );
