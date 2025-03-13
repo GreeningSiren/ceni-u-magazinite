@@ -104,7 +104,7 @@ export default function UserSettings() {
           if (modifiedRegion) {
             window.location.reload();
           }
-        }, 2000);
+        }, 1500);
       }
     } catch (error) {
       console.error('Грешка при запазване на предпочитания:', error);
