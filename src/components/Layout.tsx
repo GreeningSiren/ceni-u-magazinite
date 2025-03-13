@@ -4,6 +4,7 @@ import { ShoppingCart, LogOut, Menu, X, LogIn } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../lib/auth';
 import UserSettings from './UserSettings';
+import UpdateChecker from './UpdateChecker';
 
 export default function Layout() {
   const navigate = useNavigate();
@@ -181,6 +182,7 @@ export default function Layout() {
           <p className="text-center text-sm text-gray-500 dark:text-gray-400">
             {new Date().getFullYear()} Цени у магазините. Никакви права запазени.
           </p>
+          <UpdateChecker />
         </div>
       </footer>
     </div>

@@ -24,10 +24,16 @@ export default defineConfig({
             type: 'image/png'
           }
         ]
+      },
+      devOptions: {
+        enabled: true
       }
     })
   ],
   optimizeDeps: {
     exclude: ['lucide-react'],
+  },
+  define: {
+    "import.meta.env.VITE_GIT_COMMIT_SHA": JSON.stringify(process.env.VERCEL_GIT_COMMIT_SHA || ""),
   },
 });
