@@ -11,6 +11,7 @@ import AdminDashboard from './components/AdminDashboard';
 import { useAuth } from './lib/auth';
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { ShoppingCart } from 'lucide-react';
 
 function App() {
   return (
@@ -28,7 +29,12 @@ function AppRoutes() {
   const { user, isAdmin, loading } = useAuth();
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Зареждане...</div>;
+    return <div className="flex justify-center items-center h-screen">
+      <ShoppingCart className="h-8 w-8 text-blue-500" />
+      <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">
+        Цени у магазините - Зареждане...
+      </span>
+    </div>;
   }
 
   return (
@@ -75,7 +81,7 @@ function AppRoutes() {
             )
           }
         />
-        
+
         {/* Auth route */}
         <Route
           path="auth"
