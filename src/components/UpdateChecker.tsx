@@ -52,7 +52,7 @@ function UpdateChecker() {
       <button
         onClick={async () => {
           await updateServiceWorker();
-          window.location.reload();
+          setTimeout(() => window.location.reload(), 2000);
         }}
         className="bg-white text-green-600 px-3 py-1 rounded-lg font-semibold hover:bg-gray-100 transition"
       >
