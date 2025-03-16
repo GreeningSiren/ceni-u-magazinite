@@ -17,7 +17,7 @@ export default function Layout() {
       console.error('Error logging out:', error.message);
       localStorage.removeItem('sb-jidzqeqmqpkwovevqbfa-auth-token');
     }
-    setTimeout(() => {navigate('/');}, 500);
+    setTimeout(() => {navigate('/');}, 100);
   };
 
   const toggleMobileMenu = () => {

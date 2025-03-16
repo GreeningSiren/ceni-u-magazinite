@@ -101,7 +101,7 @@ export default function UserSettings() {
           setSaveSuccess(false);
           setModifiedRegion(false);
           setShowModal(false);
-          if (modifiedRegion) {
+          if (modifiedRegion && !newTheme) {
             window.location.reload();
           }
         }, 1500);
