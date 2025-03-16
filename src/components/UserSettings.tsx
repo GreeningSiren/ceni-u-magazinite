@@ -100,8 +100,10 @@ export default function UserSettings() {
         setTimeout(() => {
           setSaveSuccess(false);
           setModifiedRegion(false);
-          setShowModal(false);
-          if (modifiedRegion && !newTheme) {
+          if(!newTheme) {
+            setShowModal(false);
+          }
+          if (modifiedRegion) {
             window.location.reload();
           }
         }, 1500);
