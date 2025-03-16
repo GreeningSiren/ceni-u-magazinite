@@ -399,7 +399,7 @@ export default function PriceComparison() {
                             required
                             value={formData.product_id}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                           >
                             <option value="">Изберете продукт</option>
                             {products.map((product) => (
@@ -419,7 +419,7 @@ export default function PriceComparison() {
                             required
                             value={formData.store_id}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                           >
                             <option value="">Изберете магазин</option>
                             {stores.map((store) => (
@@ -443,7 +443,7 @@ export default function PriceComparison() {
                               step="0.01"
                               value={formData.price}
                               onChange={handleInputChange}
-                              className="focus:ring-blue-500 focus:border-blue-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
+                              className="focus:ring-blue-500 focus:border-blue-500 block w-full pr-12 sm:text-sm border border-gray-300 bg-white rounded-md"
                               placeholder="0.00"
                             />
                             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -461,7 +461,7 @@ export default function PriceComparison() {
                             id="date_observed"
                             value={formData.date_observed}
                             onChange={handleInputChange}
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                           />
                         </div>
                         <div className="flex items-center">
@@ -471,7 +471,7 @@ export default function PriceComparison() {
                             type="checkbox"
                             checked={formData.on_sale}
                             onChange={handleInputChange}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 bg-white rounded"
                           />
                           <label htmlFor="on_sale" className="ml-2 block text-sm text-gray-900">
                             Този продукт е в промоция
