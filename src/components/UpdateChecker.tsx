@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
-import { Info, X } from "lucide-react"; // Import icons
+import { Info, X, Loader2 } from "lucide-react"; // Import icons
 
 const GITHUB_OWNER = "GreeningSiren";
 const GITHUB_REPO = "ceni-u-magazinite";
@@ -13,6 +13,7 @@ function UpdateChecker() {
   const { needRefresh, updateServiceWorker } = useRegisterSW();
   const [loading, setLoading] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     async function checkForUpdate() {
@@ -46,21 +47,29 @@ function UpdateChecker() {
     return null;
   }
 
+  const handleUpdate = async () => {
+    setIsUpdating(true);
+    await updateServiceWorker();
+    setTimeout(() => {
+      setIsUpdating(false);
+      window.location.reload()
+    }, 5000);
+  }
+
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-fade-in">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg drop-shadow-xl flex items-center gap-3 animate-fade-in">
       <span>New version available!</span>
       <button
-        onClick={async () => {
-          await updateServiceWorker();
-          setTimeout(() => window.location.reload(), 2000);
-        }}
-        className="bg-white text-green-600 px-3 py-1 rounded-lg font-semibold hover:bg-gray-100 transition"
+        onClick={handleUpdate}
+        className={"bg-white text-green-600 px-3 py-1 rounded-lg font-semibold flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700" + (isUpdating ? " cursor-not-allowed" : "")}
+        disabled={isUpdating}
       >
+        {isUpdating && <Loader2 className="w-5 h-5 animate-spin" />} {/* Loader icon */}
         Update
       </button>
       <button
         onClick={() => setShowInfo(!showInfo)}
-        className="bg-white text-blue-600 p-2 rounded-lg hover:bg-gray-100 transition"
+        className="bg-white text-blue-600 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
       >
         <Info className="w-5 h-5" /> {/* Info icon */}
       </button>
