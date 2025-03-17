@@ -83,9 +83,7 @@ export default function PriceComparison() {
       if (productsData && productsData.length > 0)  {
         if(productId) {
           setSelectedProduct(parseInt(productId));
-          return;
         }
-        setSelectedProduct(productsData[0].id);
       }
     } catch (error) {
       console.error('Грешка при извличане на данни:', error);
@@ -253,7 +251,7 @@ export default function PriceComparison() {
             value={selectedProduct || ''}
             onChange={handleProductSelect}
           >
-            <option value="">{filteredProducts.length > 0 ? "Изберете продукт" : "Няма намерени продукти"}</option>
+            <option value="">{loading ? "Зареждат се продуктите..." : filteredProducts.length > 0 ? "Изберете продукт" : "Няма намерени продукти"}</option>
             {filteredProducts.map((product) => (
               <option key={product.id} value={product.id}>
                 {product.name} {product.brand ? `(${product.brand})` : ''}
