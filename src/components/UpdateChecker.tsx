@@ -50,10 +50,11 @@ function UpdateChecker() {
   const handleUpdate = async () => {
     setIsUpdating(true);
     await updateServiceWorker();
+    // bukvalen timeout ako neshto ne se updeitne i usera she proba pak
     setTimeout(() => {
       setIsUpdating(false);
       window.location.reload()
-    }, 5000);
+    }, 10000);
   }
 
   return (
