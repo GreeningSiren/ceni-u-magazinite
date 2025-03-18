@@ -54,7 +54,7 @@ function UpdateChecker() {
     setTimeout(() => {
       setIsUpdating(false);
       window.location.reload()
-    }, 10000);
+    }, 30000);
   }
 
   return (
