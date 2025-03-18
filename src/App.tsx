@@ -39,7 +39,7 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<Layout />} errorElement={<Navigate to="/" />} >
+      <Route path="/" element={<Layout />} >
         <Route index element={<Home />} />
         <Route path="compare" element={<PriceComparison />} />
 
@@ -88,6 +88,9 @@ function AppRoutes() {
           element={user ? <Navigate to="/dashboard" replace /> : <Auth />}
         />
       </Route>
+      
+      <Route path="*" element={<Navigate to="/" replace />} />
+
     </Routes>
   );
 }
