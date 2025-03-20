@@ -74,10 +74,10 @@ function UpdateChecker() {
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg drop-shadow-xl flex items-center gap-3 animate-slide-up">
       {updateFailed ? (
-        <span>⚠️ Рестартирайте приложението, за да бъде обновена версията.</span>
+        <span>⚠️ Презаредете страницата или рестартирайте приложението, за да може да се обнови.</span>
       ) : (
         <>
-          <span>New version available!</span>
+          <span>Нова възможна версия!</span>
           <button
             onClick={handleUpdate}
             className={`bg-white text-green-600 px-3 py-1 rounded-lg font-semibold flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 ${
