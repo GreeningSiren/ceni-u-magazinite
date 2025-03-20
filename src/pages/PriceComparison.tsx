@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Plus, DollarSign, TrendingDown, TrendingUp, Search } from 'lucide-react';
 import { useAuth } from '../lib/auth';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 
 interface Store {
   id: number;
@@ -38,7 +38,7 @@ export default function PriceComparison() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const [formData, setFormData] = useState({
     product_id: '',
     store_id: '',
@@ -68,16 +68,16 @@ export default function PriceComparison() {
         .from('stores')
         .select('id, name')
         .order('name');
-      
+
       if (storesError) throw storesError;
       setStores(storesData || []);
-      
+
       // Fetch products
       const { data: productsData, error: productsError } = await supabase
         .from('products')
         .select('id, name, brand')
         .order('name');
-      
+
       if (productsError) throw productsError;
       setProducts(productsData || []);
 
@@ -110,9 +110,9 @@ export default function PriceComparison() {
         `)
         .eq('product_id', productId)
         .order('price', { ascending: true });
-      
+
       if (error) throw error;
-      
+
       // Transform the data to a more usable format
       const formattedData = data?.map(item => ({
         id: item.id,
@@ -125,7 +125,7 @@ export default function PriceComparison() {
         product_brand: item.products?.brand || null,
         store_name: item.stores?.name || ''
       })) || [];
-      
+
       setPriceRecords(formattedData);
     } catch (error) {
       console.error('Грешка при извличане на сравнение на цени:', error);
@@ -136,7 +136,7 @@ export default function PriceComparison() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
-    
+
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -158,11 +158,11 @@ export default function PriceComparison() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const user = await supabase.auth.getUser();
       if (!user.data.user) throw new Error('Потребителят не е удостоверен');
-      
+
       const priceData = {
         product_id: parseInt(formData.product_id),
         store_id: parseInt(formData.store_id),
@@ -171,13 +171,13 @@ export default function PriceComparison() {
         on_sale: formData.on_sale,
         user_id: user.data.user.id
       };
-      
+
       const { error } = await supabase
         .from('prices')
         .insert([priceData]);
-      
+
       if (error) throw error;
-      
+
       setShowModal(false);
       if (selectedProduct) {
         fetchPriceComparison(selectedProduct);
@@ -200,7 +200,7 @@ export default function PriceComparison() {
     openAddModal();
   };
 
-  const filteredProducts = products.filter(product => 
+  const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (product.brand && product.brand.toLowerCase().includes(searchTerm.toLowerCase()))
   );
@@ -236,7 +236,7 @@ export default function PriceComparison() {
               className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"
               placeholder="Търсене по име на продукт или марка"
               value={searchTerm}
-              onChange={(e) => {setSearchTerm(e.target.value); setSelectedProduct(filteredProducts[0]?.id);}}
+              onChange={(e) => { setSearchTerm(e.target.value); setSelectedProduct(filteredProducts[0]?.id); }}
             />
           </div>
         </div>
@@ -293,10 +293,10 @@ export default function PriceComparison() {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {priceRecords.map((record, index) => {
                         const isLowestPrice = index === 0; // First record is the lowest price
-                        const priceDifference = index > 0 
+                        const priceDifference = index > 0
                           ? ((record.price - priceRecords[0].price) / priceRecords[0].price * 100).toFixed(1)
                           : '0';
-                        
+
                         return (
                           <tr key={record.id} className={isLowestPrice ? 'bg-green-50' : 'bg-white dark:bg-gray-200'}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-900">
@@ -368,6 +368,17 @@ export default function PriceComparison() {
           </>
         )}
       </div>
+        {!user && (
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <p>
+              Ако желаете да виждате цени само от специфичен район, си направете профил от{' '}
+              <Link to="/auth" className="text-blue-500 underline">
+                тук
+              </Link>
+              {' '}и после задайте желания район от настройките на профила си.
+            </p>
+          </div>
+        )}
 
       {/* Add Price Modal */}
       {showModal && (
