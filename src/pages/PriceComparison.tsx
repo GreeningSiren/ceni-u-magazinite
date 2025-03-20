@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Plus, DollarSign, TrendingDown, TrendingUp, Search } from 'lucide-react';
 import { useAuth } from '../lib/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Store {
   id: number;
@@ -37,6 +37,7 @@ export default function PriceComparison() {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   
   const [formData, setFormData] = useState({
     product_id: '',
@@ -52,6 +53,7 @@ export default function PriceComparison() {
 
   useEffect(() => {
     if (selectedProduct) {
+      setSearchParams({ product: selectedProduct.toString() }); // Updates URL
       fetchPriceComparison(selectedProduct);
     }
   }, [selectedProduct]);
@@ -76,14 +78,11 @@ export default function PriceComparison() {
       
       if (productsError) throw productsError;
       setProducts(productsData || []);
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      const productId = urlParams.get('product');
-      // If there are products, select the first one by default
-      if (productsData && productsData.length > 0)  {
-        if(productId) {
-          setSelectedProduct(parseInt(productId));
-        }
+
+      // Get the product from the URL
+      const productId = searchParams.get('product');
+      if (productsData && productsData.length > 0 && productId) {
+        setSelectedProduct(parseInt(productId));
       }
     } catch (error) {
       console.error('Грешка при извличане на данни:', error);
