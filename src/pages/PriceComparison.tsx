@@ -55,8 +55,10 @@ export default function PriceComparison() {
     if (selectedProduct) {
       setSearchParams({ product: selectedProduct.toString() }); // Updates URL
       fetchPriceComparison(selectedProduct);
+    } else {
+      setSearchParams({})
     }
-  }, [selectedProduct]);
+  }, [selectedProduct, setSearchParams]);
 
   const fetchStoresAndProducts = async () => {
     setLoading(true);
