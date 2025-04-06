@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, ShoppingBag, Edit, Trash2 } from 'lucide-react';
+import { Plus, ShoppingBag, Edit, Trash2, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../lib/auth';
 
@@ -22,6 +22,7 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<ProductType | null>(null);
+  const [updatingProduct, setUpdatingProduct] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -90,6 +91,7 @@ export default function Products() {
     try {
       const user = await supabase.auth.getUser();
       if (!user.data.user) throw new Error('Потребителят не е удостоверен');
+      setUpdatingProduct(true);
       
       const productData = {
         name: formData.name,
@@ -126,6 +128,7 @@ export default function Products() {
       }
       
       setShowModal(false);
+      setUpdatingProduct(false);
       fetchProducts();
     } catch (error) {
       console.error('Грешка при запазване на продукт:', error);
@@ -376,8 +379,10 @@ export default function Products() {
                   <button
                     type="submit"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    disabled={updatingProduct}
                   >
-                    {editingProduct ? 'Обнови' : 'Добави'}
+                    {editingProduct ? (updatingProduct ? 'Обновяване' : 'Обнови') : (updatingProduct ?  'Добавяне' : 'Добави')}
+                    {updatingProduct && <span className="ml-2 animate-spin"><Loader2 /></span>}
                   </button>
                   <button
                     type="button"

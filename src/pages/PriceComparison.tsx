@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, DollarSign, TrendingDown, TrendingUp, Search } from 'lucide-react';
+import { Plus, DollarSign, TrendingDown, TrendingUp, Search, Loader2 } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 
@@ -37,6 +37,7 @@ export default function PriceComparison() {
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null);
+  const [updatingPrice, setUpdatingPrice] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [formData, setFormData] = useState({
@@ -162,6 +163,7 @@ export default function PriceComparison() {
     try {
       const user = await supabase.auth.getUser();
       if (!user.data.user) throw new Error('Потребителят не е удостоверен');
+      setUpdatingPrice(true);
 
       const priceData = {
         product_id: parseInt(formData.product_id),
@@ -179,6 +181,7 @@ export default function PriceComparison() {
       if (error) throw error;
 
       setShowModal(false);
+      setUpdatingPrice(false);
       if (selectedProduct) {
         fetchPriceComparison(selectedProduct);
       }
@@ -495,8 +498,10 @@ export default function PriceComparison() {
                   <button
                     type="submit"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    disabled={updatingPrice}
                   >
-                    Добави
+                    {updatingPrice ? 'Добавяне...' : 'Добави цена'}
+                    {updatingPrice && <span className="ml-2 animate-spin"><Loader2 /></span>}
                   </button>
                   <button
                     type="button"

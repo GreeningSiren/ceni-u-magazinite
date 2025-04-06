@@ -68,7 +68,7 @@ function UpdateChecker() {
     await updateServiceWorker();
     setTimeout(() => {
       window.location.reload();
-    }, 5000);
+    }, 2000);
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Store, Edit, Trash2, MapPin } from 'lucide-react';
+import { Plus, Store, Edit, Trash2, MapPin, Loader2 } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 
 interface StoreType {
@@ -27,6 +27,7 @@ export default function Stores() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingStore, setEditingStore] = useState<StoreType | null>(null);
+  const [updatingStore, setUpdatingStore] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     address: '',
@@ -113,6 +114,7 @@ export default function Stores() {
     try {
       const user = await supabase.auth.getUser();
       if (!user.data.user) throw new Error('Потребителят не е удостоверен');
+      setUpdatingStore(true);
       
       const storeData = {
         name: formData.name,
@@ -143,6 +145,7 @@ export default function Stores() {
       }
       
       setShowModal(false);
+      setUpdatingStore(false);
       fetchStores();
     } catch (error) {
       console.error('Грешка при запазване на магазин:', error);
@@ -423,7 +426,8 @@ export default function Stores() {
                     type="submit"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                   >
-                    {editingStore ? 'Обнови' : 'Добави'}
+                    {editingStore ? (updatingStore ? 'Обновяване': 'Обнови') : (updatingStore ? 'Добавяне': 'Добави')}
+                    {updatingStore && <span className="ml-2 animate-spin"><Loader2 /></span>}
                   </button>
                   <button
                     type="button"
